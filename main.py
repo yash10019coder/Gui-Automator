@@ -1,5 +1,6 @@
 import pyautogui
 import time
+import random
 
 
 def clickImage(image):
@@ -12,30 +13,33 @@ def downloadAssingment():
     clickImage('options_menu_google_drive.png')
     pyautogui.press('up')
     pyautogui.press('enter')
-    time.sleep(.5)
+    time.sleep(25)
+    clickImage('save_button_nautilus.png')
 
 
 def randomlySelectAssignmetsAndDownloadThem(count):
     for i in range(count):
-        downloadAssingment()
-        time.sleep(.5)
+        pyautogui.keyDown('ctrl')
+        for j in range(random.randint(1, 5)):
+            pyautogui.press('right')
+        pyautogui.press('space')
+        pyautogui.keyUp('ctrl')
+    downloadAssingment()
 
 
-assignmentLink = 'https://drive.google.com/drive/u/1/folders/1VlkehHj-3pM1dxEURCJnutve27tblrxz'
+def main():
+    assignmentLink = 'https://drive.google.com/drive/u/1/folders/1VlkehHj-3pM1dxEURCJnutve27tblrxz'
 
-pyautogui.hotkey('alt', '1')
-time.sleep(.5)
-try:
+    pyautogui.hotkey('alt', '1')
+    time.sleep(.5)
     # opening the link in a new tab
     clickImage('new_tab_browser_button.png')
     pyautogui.typewrite(assignmentLink)
     pyautogui.press('enter')
     time.sleep(5)
     # focussing on the files
-    clickImage('files_google_drive.png')
-    pyautogui.press('right')
-    downloadAssingment()
+    pyautogui.press('alt')
+    randomlySelectAssignmetsAndDownloadThem(10)
 
 
-except Exception as e:
-    print(e)
+main()
