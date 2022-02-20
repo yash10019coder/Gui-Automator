@@ -3,6 +3,7 @@ import time
 import random
 import os
 import shutil
+import zipfile
 
 
 def clickImage(image):
@@ -29,21 +30,23 @@ def randomlySelectAssignmetsAndDownloadThem(count):
     downloadAssingment()
 
 
-def unzipFile(path):
-    os.system('unzip ' + path)
+def unzipFile(file_path, dest_path):
+    with zipfile.ZipFile(file_path, 'r') as zip_ref:
+        zip_ref.extractall(dest_path)
 
 
 def moveDownloadedFile(path1, path2):
     for file in os.listdir(path1):
         if file.endswith(".zip"):
-            shutil.move(path1 + file, path2 + file)
+            shutil.copy(path1 + file, path2 + file)
             break
 
 
 def unzipAllFilesInFolder(path):
     for file in os.listdir(path):
         if file.endswith(".zip"):
-            unzipFile(path + file)
+            os.mkdir(path + file[:-4])
+            unzipFile(path + file, path + file[:-4])
     for file in os.listdir(path):
         if file.endswith(".zip"):
             os.remove(path + file)
@@ -53,30 +56,91 @@ def anyCaseToPascalCase(string):
     return ''.join(x.capitalize() or '_' for x in string.split('_'))
 
 
-assignmentLink = 'https://drive.google.com/drive/u/1/folders/1VlkehHj-3pM1dxEURCJnutve27tblrxz'
+def removeStartNumerals(string):
+    if string[2].isdigit():
+        return string[3:]
+    elif string[1].isdigit():
+        return string[2:]
+    elif string[0] == '.' and string[1].isdigit():
+        return string[1:]
+    else:
+        return string
+
+
+def renameFilesAndFoldersAccordingToPascalCase(path):
+    for folder in os.listdir(path):
+        if folder.startswith('.'):
+            continue
+        arr = os.listdir(path + folder)
+        if len(os.listdir(path + folder)) > 2:
+            for program in os.listdir(path + folder):
+                os.rename(path + '' + folder + '/' + program,
+                          path + '' + folder + '/' + anyCaseToPascalCase(program))
+                os.rename(path + '' + folder + '/' + anyCaseToPascalCase(program),
+                          path + '' + folder + '/' + removeStartNumerals(program))
+        else:
+            while True:
+                if len(os.listdir(path + folder)) == 2:
+                    folder = folder + '/' + os.listdir(path + folder)[1]
+                    if len(os.listdir(path + folder)) >= 2:
+                        break
+                else:
+                    folder = folder + '/' + os.listdir(path + folder)[0]
+                    if len(os.listdir(path + folder)) >= 2:
+                        break
+            for program in os.listdir(path + folder):
+                os.rename(path + '' + folder + '/' + program,
+                          path + '' + folder + '/' + anyCaseToPascalCase(program))
+                os.rename(path + '' + folder + '/' + anyCaseToPascalCase(program),
+                          path + '' + folder + '/' + removeStartNumerals(program))
+
+
+def copyAFileFromEachDirectory(path, copyPath):
+    count = 0
+    for folder in os.listdir(path):
+        if folder.startswith('.'):
+            continue
+        arr = os.listdir(path + folder)
+        if len(os.listdir(path + folder)) > 2:
+            programs = os.listdir(path + folder)
+            shutil.copy(path + folder + '/' + programs[count], copyPath)
+            count += 1
+        else:
+            while True:
+                if len(os.listdir(path + folder)) == 2:
+                    folder = folder + '/' + os.listdir(path + folder)[1]
+                    if len(os.listdir(path + folder)) >= 2:
+                        break
+                else:
+                    folder = folder + '/' + os.listdir(path + folder)[0]
+                    if len(os.listdir(path + folder)) >= 2:
+                        break
+            programs = os.listdir(path + folder)
+            shutil.copy(path + folder + '/' + programs[count], copyPath)
+            count += 1
+
+
+assignmentLink = 'https://drive.google.com/drive/u/1/folders/1_-He6Ps763HxWsfnQ0R1BRe_SEg4N_Qa?usp=sharing'
 downloadsFolder = '/home/ubuntu/Downloads/temp/'
-destinationFolder = '/home/ubuntu/Documents/college/cp/semester4/week2auto/'
+destinationFolder = '/home/ubuntu/Documents/college/semester4/cp/week4/'
 
 
 def main():
-    os.system('brave-browser')
-    time.sleep(.5)
-    # opening the link in a new tab
-    clickImage('new_tab_browserster4/week2auto/LCS2020044.zip or /home/ubuntu/Documents/college/cp/semester4/week2auto_button.png')
-    pyautogui.typewrite(assignmentLink)
-    pyautogui.press('enter')
-    time.sleep(5)
+    # os.system('brave-browser ' + assignmentLink)
+    # time.sleep(5)
+
     # focussing on the files
-    pyautogui.press('alt')
-    randomlySelectAssignmetsAndDownloadThem(10)
+    # pyautogui.press('alt')
+    # randomlySelectAssignmetsAndDownloadThem(10)
+
     # moveDownloadedFile(downloadsFolder, destinationFolder)
     # file = os.listdir(destinationFolder)
-    # unzipFile(destinationFolder + file[0])
+    # unzipFile(destinationFolder + file[0], destinationFolder)
     # os.remove(destinationFolder + file[0])
     # unzipAllFilesInFolder(destinationFolder)
-    # for folder in os.listdir(destinationFolder):
-    #     for programs in os.listdir(destinationFolder + folder):
-    #         os.rename(destinationFolder + folder + programs, destinationFolder + folder + anyCaseToPascalCase(programs))
+    renameFilesAndFoldersAccordingToPascalCase(destinationFolder)
+    # os.mkdir(destinationFolder + '.lit2020066 yash verma assignment week3')
+    copyAFileFromEachDirectory(destinationFolder, destinationFolder + '/' + '.lit2020066 yash verma assignment week3')
 
 
 main()
