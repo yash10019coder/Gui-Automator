@@ -35,7 +35,7 @@ def unzipFile(file_path, dest_path):
         zip_ref.extractall(dest_path)
 
 
-def moveDownloadedFile(path1, path2):
+def copyDownloadedFile(path1, path2):
     for file in os.listdir(path1):
         if file.endswith(".zip"):
             shutil.copy(path1 + file, path2 + file)
@@ -120,27 +120,26 @@ def copyAFileFromEachDirectory(path, copyPath):
             count += 1
 
 
-assignmentLink = 'https://drive.google.com/drive/u/1/folders/1_-He6Ps763HxWsfnQ0R1BRe_SEg4N_Qa?usp=sharing'
-downloadsFolder = '/home/ubuntu/Downloads/temp/'
+assignmentLink = 'https://drive.google.com/drive/u/1/folders/1ZmDG9pAzMqdamGRfqumqrc_SS9lAEwdl?usp=sharing'
+downloadsFolder = '/home/ubuntu/Downloads/'
 destinationFolder = '/home/ubuntu/Documents/college/semester4/cp/week4/'
+solutionsFolderInDestination = '.lit2020066 yash verma cp assignment week4'
 
 
 def main():
-    # os.system('brave-browser ' + assignmentLink)
-    # time.sleep(5)
-
-    # focussing on the files
-    # pyautogui.press('alt')
-    # randomlySelectAssignmetsAndDownloadThem(10)
-
-    # moveDownloadedFile(downloadsFolder, destinationFolder)
-    # file = os.listdir(destinationFolder)
-    # unzipFile(destinationFolder + file[0], destinationFolder)
-    # os.remove(destinationFolder + file[0])
-    # unzipAllFilesInFolder(destinationFolder)
+    os.system('brave-browser ' + assignmentLink)
+    time.sleep(5)
+    pyautogui.press('alt')
+    randomlySelectAssignmetsAndDownloadThem(10)
+    copyDownloadedFile(downloadsFolder, destinationFolder)
+    file = os.listdir(destinationFolder)
+    unzipFile(destinationFolder + file[0], destinationFolder)
+    os.remove(destinationFolder + file[0])
+    unzipAllFilesInFolder(destinationFolder)
     renameFilesAndFoldersAccordingToPascalCase(destinationFolder)
-    # os.mkdir(destinationFolder + '.lit2020066 yash verma assignment week3')
-    copyAFileFromEachDirectory(destinationFolder, destinationFolder + '/' + '.lit2020066 yash verma assignment week3')
+    os.mkdir(destinationFolder + solutionsFolderInDestination)
+    copyAFileFromEachDirectory(destinationFolder, destinationFolder + '/' + solutionsFolderInDestination)
+    renameFilesAndFoldersAccordingToPascalCase(destinationFolder + solutionsFolderInDestination)
 
 
 main()
