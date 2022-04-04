@@ -129,12 +129,14 @@ downloadsFolder = '/home/ubuntu/Downloads/'
 destinationFolder = '/home/ubuntu/Documents/college/semester4/cp/week4/'
 solutionsFolderInDestination = '.lit2020066 yash verma cp assignment week4'
 
+assignmentLink = input('Enter the google drive folder link for the assignments ')
+googleAccount = input(
+    'Enter your college account postion in your browser for the first position input is zero for the first account ')
+assignmentLink = assignmentLink.replace('/u/1', '/u/' + googleAccount)
+name = input('Enter your username of windows in case sensive')
 if platform.system() == 'Windows':
-    googleAccount = input('Enter your college account postion in your browser')
-    assignmentLink = assignmentLink.replace('/u/1', '/u/' + googleAccount)
-    name = input('Enter your username in case sensive')
-    downloadsFolder = f'C:/Users/${name}/Downloads/'
-    destinationFolder = f'C:/Users/${name}/Documents/college/semester4/cp/week4/'
+    downloadsFolder = f'C:/Users/${name}/Downloads/${input("Enter the name of your folder where zip file will be downloaded")}'
+    destinationFolder = f'C:/Users/${name}/Documents/${"Enter the destination folder where files will be generated"}/'
     downloadsFolder.replace('/', '\\')
     destinationFolder.replace('/', '\\')
 
