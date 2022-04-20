@@ -4,6 +4,7 @@ import random
 import os
 import shutil
 import zipfile
+import platform
 
 
 def clickImage(image):
@@ -27,7 +28,10 @@ def randomlySelectAssignmetsAndDownloadThem(count):
             pyautogui.press('right')
         pyautogui.press('space')
         pyautogui.keyUp('ctrl')
-    downloadAssingment()
+    if platform.system() != 'Windows':
+        downloadAssingment()
+    else:
+        time.sleep(30)
 
 
 def unzipFile(file_path, dest_path):
@@ -37,7 +41,7 @@ def unzipFile(file_path, dest_path):
 
 def copyDownloadedFile(path1, path2):
     for file in os.listdir(path1):
-        if file.endswith(".zip"):
+        if file.endswith(".zip") and file.startswith('drive-download'):
             shutil.copy(path1 + file, path2 + file)
             break
 
@@ -74,25 +78,25 @@ def renameFilesAndFoldersAccordingToPascalCase(path):
         arr = os.listdir(path + folder)
         if len(os.listdir(path + folder)) > 2:
             for program in os.listdir(path + folder):
-                os.rename(path + '' + folder + '/' + program,
-                          path + '' + folder + '/' + anyCaseToPascalCase(program))
-                os.rename(path + '' + folder + '/' + anyCaseToPascalCase(program),
-                          path + '' + folder + '/' + removeStartNumerals(program))
+                os.rename(path + '' + folder + '\\' + program,
+                          path + '' + folder + '\\' + anyCaseToPascalCase(program))
+                os.rename(path + '' + folder + '\\' + anyCaseToPascalCase(program),
+                          path + '' + folder + '\\' + removeStartNumerals(program))
         else:
             while True:
                 if len(os.listdir(path + folder)) == 2:
-                    folder = folder + '/' + os.listdir(path + folder)[1]
+                    folder = folder + '\\' + os.listdir(path + folder)[1]
                     if len(os.listdir(path + folder)) >= 2:
                         break
                 else:
-                    folder = folder + '/' + os.listdir(path + folder)[0]
+                    folder = folder + '\\' + os.listdir(path + folder)[0]
                     if len(os.listdir(path + folder)) >= 2:
                         break
             for program in os.listdir(path + folder):
-                os.rename(path + '' + folder + '/' + program,
-                          path + '' + folder + '/' + anyCaseToPascalCase(program))
-                os.rename(path + '' + folder + '/' + anyCaseToPascalCase(program),
-                          path + '' + folder + '/' + removeStartNumerals(program))
+                os.rename(path + '' + folder + '\\' + program,
+                          path + '' + folder + '\\' + anyCaseToPascalCase(program))
+                os.rename(path + '' + folder + '\\' + anyCaseToPascalCase(program),
+                          path + '' + folder + '\\' + removeStartNumerals(program))
 
 
 def copyAFileFromEachDirectory(path, copyPath):
@@ -103,20 +107,20 @@ def copyAFileFromEachDirectory(path, copyPath):
         arr = os.listdir(path + folder)
         if len(os.listdir(path + folder)) > 2:
             programs = os.listdir(path + folder)
-            shutil.copy(path + folder + '/' + programs[count], copyPath)
+            shutil.copy(path + folder + '\\' + programs[count], copyPath)
             count += 1
         else:
             while True:
                 if len(os.listdir(path + folder)) == 2:
-                    folder = folder + '/' + os.listdir(path + folder)[1]
+                    folder = folder + '\\' + os.listdir(path + folder)[1]
                     if len(os.listdir(path + folder)) >= 2:
                         break
                 else:
-                    folder = folder + '/' + os.listdir(path + folder)[0]
+                    folder = folder + '\\' + os.listdir(path + folder)[0]
                     if len(os.listdir(path + folder)) >= 2:
                         break
             programs = os.listdir(path + folder)
-            shutil.copy(path + folder + '/' + programs[count], copyPath)
+            shutil.copy(path + folder + '\\' + programs[count], copyPath)
             count += 1
 
 
@@ -124,6 +128,17 @@ assignmentLink = 'https://drive.google.com/drive/u/1/folders/1ZmDG9pAzMqdamGRfqu
 downloadsFolder = '/home/ubuntu/Downloads/'
 destinationFolder = '/home/ubuntu/Documents/college/semester4/cp/week4/'
 solutionsFolderInDestination = '.lit2020066 yash verma cp assignment week4'
+
+assignmentLink = input('Enter the google drive folder link for the assignments ')
+googleAccount = input(
+    'Enter your college account postion in your browser for the first position input is zero for the first account ')
+assignmentLink = assignmentLink.replace('/u/1', '/u/' + googleAccount)
+name = input('Enter your username of windows in case sensive')
+if platform.system() == 'Windows':
+    downloadsFolder = f'C:/Users/${name}/Downloads/${input("Enter the name of your folder where zip file will be downloaded")}'
+    destinationFolder = f'C:/Users/${name}/Documents/${"Enter the destination folder where files will be generated"}/'
+    downloadsFolder.replace('/', '\\')
+    destinationFolder.replace('/', '\\')
 
 
 def main():
@@ -138,7 +153,7 @@ def main():
     unzipAllFilesInFolder(destinationFolder)
     renameFilesAndFoldersAccordingToPascalCase(destinationFolder)
     os.mkdir(destinationFolder + solutionsFolderInDestination)
-    copyAFileFromEachDirectory(destinationFolder, destinationFolder + '/' + solutionsFolderInDestination)
+    copyAFileFromEachDirectory(destinationFolder, destinationFolder + '\\' + solutionsFolderInDestination)
     renameFilesAndFoldersAccordingToPascalCase(destinationFolder + solutionsFolderInDestination)
 
 
